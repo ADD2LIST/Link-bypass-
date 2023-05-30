@@ -56,7 +56,7 @@ st.title("Link Converter")
 
 # Select conversion method
 
-conversion_method = st.selectbox("Select conversion method", ["Mdisk Pro", "Shareus"])
+conversion_method = st.selectbox("Select conversion method", ["Mdisk Pro", "Shareus", "URL Shortx"])
 
 # Input URL
 
