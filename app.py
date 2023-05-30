@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 
 import time
 
+import requests
+
 def mdiskpro(url):
 
     client = cloudscraper.create_scraper(allow_brotli=False)
@@ -38,13 +40,27 @@ def mdiskpro(url):
 
         return "Something went wrong :("
 
+def shareus(url):
+
+    token = url.split("=")[-1]
+
+    bypassed_url = "https://us-central1-my-apps-server.cloudfunctions.net/r?shortid=" + token
+
+    response = requests.get(bypassed_url).text
+
+    return response
+
 # Streamlit app
 
-st.title("Mdisk Pro Link Converter")
+st.title("Link Converter")
+
+# Select conversion method
+
+conversion_method = st.selectbox("Select conversion method", ["Mdisk Pro", "Shareus"])
 
 # Input URL
 
-url = st.text_input("Enter the Mdisk Pro URL")
+url = st.text_input("Enter the URL")
 
 # Convert button
 
@@ -52,7 +68,15 @@ if st.button("Convert"):
 
     if url:
 
-        converted_url = mdiskpro(url)
+        if conversion_method == "Mdisk Pro":
+
+            converted_url = mdiskpro(url)
+
+        elif conversion_method == "Shareus":
+
+            converted_url = shareus(url)
+
+        
 
         st.success("Converted Link:")
 
@@ -61,4 +85,5 @@ if st.button("Convert"):
     else:
 
         st.warning("Please enter a URL")
+
 
