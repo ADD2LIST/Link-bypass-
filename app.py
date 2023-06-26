@@ -8,6 +8,28 @@ import time
 
 import requests
 
+
+def mdisk(url):
+    header = {
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Referer': 'https://mdisk.me/',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
+    	 }
+    
+    inp = url 
+    fxl = inp.split("/")
+    cid = fxl[-1]
+
+    URL = f'https://diskuploader.entertainvideo.com/v1/file/cdnurl?param={cid}'
+    res = requests.get(url=URL, headers=header).json()
+    return res['download'] + '\n\n' + res['source']
+
+
+###################################################################
+
+
 def mdiskpro(url):
 
     client = cloudscraper.create_scraper(allow_brotli=False)
@@ -76,7 +98,8 @@ if st.button("Convert"):
 
             converted_url = shareus(url)
 
-        
+        elif conversion_method == "Mdisk.me";
+            converted_url = mdisk(url)
 
         st.success("Converted Link:")
 
