@@ -98,7 +98,7 @@ if st.button("Convert"):
 
             converted_url = shareus(url)
 
-        elif conversion_method == "Mdisk.me";
+        elif conversion_method == "Mdisk.me":
             converted_url = mdisk(url)
 
         st.success("Converted Link:")
