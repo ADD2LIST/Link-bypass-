@@ -73,7 +73,7 @@ def shareus(url):
     return response
 #Gplinks
 
-def gplinks_bypass(url: str):
+def GP_links(url: str):
     try:
         # Since only cloudscraper can bypass Cloudflare bot detection
         client = cloudscraper.create_scraper(allow_brotli=False)
@@ -141,7 +141,7 @@ if st.button("Convert"):
         elif conversion_method == "Mdisk.me":
             converted_url = mdisk(url)
         elif conversion_method == "GP links":
-            converted_url = GP link(ur)
+            converted_url = GP_links(url)
         st.success("Converted Link:")
 
         st.write(converted_url)
