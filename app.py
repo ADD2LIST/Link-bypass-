@@ -71,6 +71,46 @@ def shareus(url):
     response = requests.get(bypassed_url).text
 
     return response
+#Gplinks
+
+def gplinks_bypass(url: str):
+    try:
+        # Since only cloudscraper can bypass Cloudflare bot detection
+        client = cloudscraper.create_scraper(allow_brotli=False)
+
+        # Visitor ID provided by GPLinks that stores the session
+        vid = client.get(url, allow_redirects=False).headers["Location"].split("=")[-1]
+
+        # Convince GPLink that visitor has already visited the 3rd ads page and clicked continue
+        client.post(url="https://gplinks.in/track/conversion.php",
+                    data={"update": True, "visitor_id": vid, "status": 3})
+
+        # Request to get the final GPLink verification page
+        go_url = f"{url}/?{vid}"
+        response = client.get(go_url, allow_redirects=False)
+        soup = BeautifulSoup(response.content, "html.parser")
+
+        data = {}
+
+        # Find the final GPLink verification page link in the webpage
+        go_link_form = soup.find_all(id="go-link")
+        for form_elem in go_link_form:
+            if form_elem is not None:
+                inputs = form_elem.find_all("input")
+                for input_elem in inputs:
+                    data[input_elem.get('name')] = input_elem.get('value')
+
+        # Final request to get the actual bypassed link
+        bypassed_url = client.post(url="https://gplinks.co/links/go",
+                                   data=data,
+                                   headers={"x-requested-with": "XMLHttpRequest"}
+                                   ).json()["url"]
+        return bypassed_url
+    except Exception as ex:
+        print(ex)
+        return None
+
+
 
 # Streamlit app
 
@@ -78,7 +118,7 @@ st.title("Link Converter")
 
 # Select conversion method
 
-conversion_method = st.selectbox("Select conversion method", ["Mdisk Pro", "Shareus", "URL Shortx", "Mdisk.me"])
+conversion_method = st.selectbox("Select conversion method", ["Mdisk Pro", "Shareus", "URL Shortx", "Mdisk.me","GP links"])
 
 # Input URL
 
@@ -100,7 +140,8 @@ if st.button("Convert"):
 
         elif conversion_method == "Mdisk.me":
             converted_url = mdisk(url)
-
+        elif conversion_method == "GP links":
+            converted_url = GP link(ur)
         st.success("Converted Link:")
 
         st.write(converted_url)
